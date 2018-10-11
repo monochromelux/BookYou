@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                 l_layout.startAnimation(animTrans);
 
             }
-        }, 1000);
+        }, 500);
         animTrans.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
