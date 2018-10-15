@@ -1,42 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
-    android:layout_margin="30dp">
+    tools:context=".MainActivity">
+
+    <include
+        android:id="@+id/toolBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/action_bar"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
 
-        <ImageButton
-            android:id="@+id/btnLog_in"
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/btnTopLogin"
             android:layout_gravity="center_horizontal"
-            android:adjustViewBounds="true"
             android:layout_weight="1"
-            android:scaleType="matrix"
-            android:background="@drawable/login1"/>
-        <ImageButton
+            android:background="@drawable/white_login"
+            android:text="로그인"
+            android:textSize="17dp"
+            android:textColor="#FE393A"
+            android:textStyle="bold"/>
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"
+            android:id="@+id/btnTopJoin"
             android:layout_gravity="center_horizontal"
-            android:scaleType="matrix"
-            android:id="@+id/btnJoin_in"
-            android:background="@drawable/joinin1"/>
+            android:layout_weight="1"
+            android:background="@drawable/gray_join"
+            android:text="회원가입"
+            android:textSize="17dp"
+            android:textStyle="bold"/>
+
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
 
         <GridLayout
             android:layout_width="match_parent"
@@ -48,12 +65,17 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="회원 로그인" />
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:padding="7dp"
+                android:text="회원로그인" />
 
             <EditText
                 android:id="@+id/inputID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@layout/border"
+                android:padding="7dp"
                 android:hint="아이디" />
 
             <EditText
@@ -62,7 +84,9 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="비밀번호"
-                android:inputType="textPassword" />
+                android:background="@layout/border"
+                android:padding="7dp"
+                android:inputType="textPassword|textMultiLine" />
 
             <CheckBox
                 android:id="@+id/checkBox"
@@ -75,15 +99,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FE393A"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="71dp"
                 android:fontFamily="sans-serif"
                 android:text="로그인"
                 android:textColor="#FFFFFF"
-                android:textSize="20dp"
+                android:textSize="17dp"
                 android:textStyle="bold"
                 android:typeface="sans" />
 
+            <Button
+                android:id="@+id/btnNaverlogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@layout/border"
+                android:layout_marginTop="7dp"
+                android:fontFamily="sans-serif"
+                android:text="네이버로그인"
+                android:textColor="#000000"
+                android:textSize="17dp"
+                android:textStyle="bold" />
         </GridLayout>
+
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -95,20 +131,18 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:padding="7dp"
                 android:text="회원가입" />
 
             <EditText
                 android:id="@+id/inputID2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@layout/border"
+                android:padding="7dp"
                 android:hint="아이디" />
-
-            <EditText
-                android:id="@+id/inputemail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="이메일" />
 
             <EditText
                 android:id="@+id/inputPass2"
@@ -116,6 +150,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="비밀번호"
+                android:background="@layout/border"
+                android:padding="7dp"
                 android:inputType="textPassword" />
 
             <EditText
@@ -124,7 +160,18 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="비밀번호 확인"
+                android:background="@layout/border"
+                android:padding="7dp"
                 android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/inputemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:background="@layout/border"
+                android:padding="7dp"
+                android:hint="이메일" />
 
             <Button
                 android:id="@+id/btnjoin"
@@ -135,7 +182,7 @@
                 android:fontFamily="sans-serif"
                 android:text="회원가입"
                 android:textColor="#FFFFFF"
-                android:textSize="20dp"
+                android:textSize="17dp"
                 android:textStyle="bold"
                 android:typeface="sans" />
 
