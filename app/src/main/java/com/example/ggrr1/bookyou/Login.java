@@ -1,5 +1,6 @@
 package com.example.ggrr1.bookyou;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -30,8 +31,8 @@ public class Login extends AppCompatActivity {
         layLog = (GridLayout) findViewById(R.id.LoginLayout);
         layJoin = (GridLayout) findViewById(R.id.JoinLayout);
 
-        btnLogin = (Button) findViewById(R.id.btnjoin);
-        btnJoin = (Button) findViewById(R.id.btnlogin);
+        btnLogin = (Button) findViewById(R.id.btnlogin);
+        btnJoin = (Button) findViewById(R.id.btnjoin);
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar_title);
         setSupportActionBar(myToolbar);
@@ -58,6 +59,15 @@ public class Login extends AppCompatActivity {
                 btnTopJoin.setBackgroundResource(R.drawable.white_join);
                 btnTopLog.setTextColor(Color.parseColor(color_black));
                 btnTopJoin.setTextColor(Color.parseColor(color_pink));
+            }
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), BookList.class);
+                startActivity(intent);
+
             }
         });
 

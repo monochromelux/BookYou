@@ -71,15 +71,15 @@
                 android:text="회원로그인" />
 
             <EditText
-                android:id="@+id/inputID"
+                android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@layout/border"
                 android:padding="7dp"
-                android:hint="아이디" />
+                android:hint="이메일" />
 
             <EditText
-                android:id="@+id/inputPass"
+                android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -137,15 +137,16 @@
                 android:text="회원가입" />
 
             <EditText
-                android:id="@+id/inputID2"
+                android:id="@+id/join_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
                 android:background="@layout/border"
                 android:padding="7dp"
-                android:hint="아이디" />
+                android:hint="이메일" />
 
             <EditText
-                android:id="@+id/inputPass2"
+                android:id="@+id/join_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -164,21 +165,12 @@
                 android:padding="7dp"
                 android:inputType="textPassword" />
 
-            <EditText
-                android:id="@+id/inputemail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:background="@layout/border"
-                android:padding="7dp"
-                android:hint="이메일" />
-
             <Button
                 android:id="@+id/btnjoin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FE393A"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="65dp"
                 android:fontFamily="sans-serif"
                 android:text="회원가입"
                 android:textColor="#FFFFFF"
