@@ -74,6 +74,7 @@
                 android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
                 android:background="@layout/border"
                 android:padding="7dp"
                 android:hint="이메일" />
@@ -156,21 +157,29 @@
                 android:inputType="textPassword" />
 
             <EditText
-                android:id="@+id/inputPassTo"
+                android:id="@+id/join_inputPassTo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="비밀번호 확인"
+                android:inputType="textPassword"
+                android:background="@layout/border"
+                android:padding="7dp" />
+
+            <EditText
+                android:id="@+id/join_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@layout/border"
                 android:padding="7dp"
-                android:inputType="textPassword" />
+                android:hint="이름" />
 
             <Button
                 android:id="@+id/btnjoin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FE393A"
-                android:layout_marginTop="65dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif"
                 android:text="회원가입"
                 android:textColor="#FFFFFF"
