@@ -18,8 +18,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Login extends AppCompatActivity {
     Button btnTopLog, btnTopJoin;
@@ -49,7 +53,7 @@ public class Login extends AppCompatActivity {
         final EditText emailJoinText = (EditText) findViewById(R.id.join_email);
         final EditText passwordJoinText = (EditText) findViewById(R.id.join_password);
         final EditText nameJoinText = (EditText) findViewById(R.id.join_name);
-        EditText inputPassToJoinText = (EditText) findViewById(R.id.join_inputPassTo);
+        final EditText inputPassToJoinText = (EditText) findViewById(R.id.join_inputPassTo);
         myToolbar = (Toolbar) findViewById(R.id.toolbar_title);
         setSupportActionBar(myToolbar);
 
@@ -60,10 +64,6 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 layJoin.setVisibility(View.GONE);
                 layLog.setVisibility(View.VISIBLE);
-                btnTopJoin.setBackgroundResource(R.drawable.gray_join);
-                btnTopLog.setBackgroundResource(R.drawable.white_login);
-                btnTopLog.setTextColor(Color.parseColor(color_pink));
-                btnTopJoin.setTextColor(Color.parseColor(color_black));
             }
         });
         btnTopJoin.setOnClickListener(new View.OnClickListener() {
@@ -71,10 +71,6 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 layLog.setVisibility(View.GONE);
                 layJoin.setVisibility(View.VISIBLE);
-                btnTopLog.setBackgroundResource(R.drawable.gray_login);
-                btnTopJoin.setBackgroundResource(R.drawable.white_join);
-                btnTopLog.setTextColor(Color.parseColor(color_black));
-                btnTopJoin.setTextColor(Color.parseColor(color_pink));
             }
         });
 
@@ -92,38 +88,42 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 String email = emailJoinText.getText().toString();
                 String password = passwordJoinText.getText().toString();
+                String inputPassTo = inputPassToJoinText.getText().toString();
                 String name = nameJoinText.getText().toString();
 
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSONObject jsonResponse = null;
-                        try {
-                            jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(success){
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-                                builder.setMessage("회원 가입에 성공했습니다.")
-                                        .setPositiveButton("OK",null)
-                                        .create()
-                                        .show();
-                                layJoin.setVisibility(View.GONE);
-                                layLog.setVisibility(View.VISIBLE);
-                            }else{
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-                                builder.setMessage("회원 가입에 실패했습니다.")
-                                        .setNegativeButton("AGAIN",null)
-                                        .create()
-                                        .show();
+                if(isValidValues(email,password,inputPassTo,name)) {
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            JSONObject jsonResponse = null;
+                            try {
+                                jsonResponse = new JSONObject(response);
+                                int join_status = jsonResponse.getInt("join_status");
+
+                                if (join_status == 1) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                    builder.setMessage("회원 가입에 성공했습니다.")
+                                            .setPositiveButton("OK", null)
+                                            .create()
+                                            .show();
+                                    layJoin.setVisibility(View.GONE);
+                                    layLog.setVisibility(View.VISIBLE);
+                                } else if (join_status == 2) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                    builder.setMessage("이미 존재하는 이메일입니다.")
+                                            .setNegativeButton("AGAIN", null)
+                                            .create()
+                                            .show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
-                };
-                LoginRequest loginRequest = new LoginRequest(email, password, name, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(Login.this);
-                queue.add(loginRequest);
+                    };
+                    LoginRequest loginRequest = new LoginRequest(email, password, name, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(Login.this);
+                    queue.add(loginRequest);
+                }
             }
         });
 
@@ -143,5 +143,35 @@ public class Login extends AppCompatActivity {
             backPressedTime = tempTime;
             Toast.makeText(this, "한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean isValidValues(String email, String password, String inputPassTo, String name){
+        boolean isResult = false;
+
+        String regExpn = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        CharSequence inputStr = email;
+        Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+
+        if(email.isEmpty() || password.isEmpty() || inputPassTo.isEmpty() || name.isEmpty()){
+            isResult = false;
+            Toast.makeText(this, "모든 항목을 입력해주세요.", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            isResult = true;
+            if (!(email.matches(regExpn)))
+            {
+                isResult = false;
+                Toast.makeText(Login.this,"이메일 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                if (!(inputPassTo.equals(password))) {
+                    isResult = false;
+                    Toast.makeText(this, "비밀번호의 값이 같지 않습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        return isResult;
     }
 }
