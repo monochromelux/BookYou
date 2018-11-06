@@ -1,9 +1,6 @@
 package com.example.ggrr1.bookyou;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.nsd.NsdManager;
-import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +15,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +50,10 @@ public class Login extends AppCompatActivity {
         final EditText passwordJoinText = (EditText) findViewById(R.id.join_password);
         final EditText nameJoinText = (EditText) findViewById(R.id.join_name);
         final EditText inputPassToJoinText = (EditText) findViewById(R.id.join_inputPassTo);
+
+        final EditText emailLoginText = (EditText) findViewById(R.id.login_email);
+        final EditText passwordLoginText = (EditText) findViewById(R.id.login_password);
+
         myToolbar = (Toolbar) findViewById(R.id.toolbar_title);
         setSupportActionBar(myToolbar);
 
@@ -77,9 +77,41 @@ public class Login extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), BookList.class);
-                startActivity(intent);
+                final String email = emailLoginText.getText().toString();
+                final String password = passwordLoginText.getText().toString();
 
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            int login_status = jsonResponse.getInt("login_status");
+
+                            if(login_status == 1){
+                                Intent intent = new Intent(getApplicationContext(), BookList.class);
+                                startActivity(intent);
+                            }else if(login_status == 2){
+                                AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                builder.setMessage("존재하는 이메일이 없습니다.")
+                                        .setNegativeButton("AGAIN", null)
+                                        .create()
+                                        .show();
+                            }else if(login_status == 3){
+                                AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                builder.setMessage("비밀번호가 일치하지 않습니다.")
+                                        .setPositiveButton("AGAIN", null)
+                                        .create()
+                                        .show();
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                LoginRequest loginRequest = new LoginRequest(email,password, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(Login.this);
+                queue.add(loginRequest);
             }
         });
 
@@ -120,9 +152,9 @@ public class Login extends AppCompatActivity {
                             }
                         }
                     };
-                    LoginRequest loginRequest = new LoginRequest(email, password, name, responseListener);
+                    JoinRequest joinRequest = new JoinRequest(email, password, name, responseListener);
                     RequestQueue queue = Volley.newRequestQueue(Login.this);
-                    queue.add(loginRequest);
+                    queue.add(joinRequest);
                 }
             }
         });
