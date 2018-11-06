@@ -15,6 +15,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,11 +86,13 @@ public class Login extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
+
                             int login_status = jsonResponse.getInt("login_status");
 
                             if(login_status == 1){
-                                Intent intent = new Intent(getApplicationContext(), BookList.class);
-                                startActivity(intent);
+                              Intent intent = new Intent(getApplicationContext(), BookList.class);
+                               startActivity(intent);
+                               finish();
                             }else if(login_status == 2){
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
                                 builder.setMessage("존재하는 이메일이 없습니다.")
