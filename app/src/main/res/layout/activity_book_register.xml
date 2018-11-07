@@ -26,12 +26,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop = "15dp"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:id="@+id/bookImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+
+        <!--<Button-->
+            <!--android:id="@+id/btsImageUpload"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="책 이미지 업로드"/>-->
 
     </LinearLayout>
 
@@ -171,7 +178,7 @@
     </TableLayout>
 
     <Button
-        android:id="@+id/btnModify"
+        android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
