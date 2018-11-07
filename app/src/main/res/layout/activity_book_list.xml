@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".BookList">
 
     <include
@@ -12,4 +13,50 @@
         android:layout_height="wrap_content"
         layout="@layout/action_bar"
         />
-</android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="도서 목록"
+        android:background="#FE393A"
+        android:textColor="#FFF"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:typeface="sans"
+        android:gravity="center"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listview"
+                android:divider="#FE393A">
+
+            </ListView>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="도서 등록"
+        android:background="#FE393A"
+        android:textColor="#FFF"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:typeface="sans"
+        android:gravity="center"
+        android:id="@+id/register"/>
+
+</LinearLayout>
