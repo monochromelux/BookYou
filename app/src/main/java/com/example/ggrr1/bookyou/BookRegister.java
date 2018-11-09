@@ -7,7 +7,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,18 +28,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookRegister extends AppCompatActivity {
-    ImageView imageView;
-    Button btnImageUpload;
+    ImageView btnImage;
+    EditText bookName, author, publishHouse, subject, professor, price, salePrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_register);
 
-        imageView = (ImageView) findViewById(R.id.imageView);
-        btnImageUpload = (Button) findViewById(R.id.btnImageUpload);
+        btnImage = (ImageButton) findViewById(R.id.btnImage);
 
-        btnImageUpload.setOnClickListener(new View.OnClickListener() {
+        bookName = (EditText) findViewById(R.id.bookName);
+        author = (EditText) findViewById(R.id.author);
+        publishHouse = (EditText) findViewById(R.id.publishHouse);
+        subject = (EditText) findViewById(R.id.subject);
+        professor = (EditText) findViewById(R.id.professor);
+        price = (EditText) findViewById(R.id.price);
+        salePrice = (EditText) findViewById(R.id.salePrice);
+
+        btnImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //if everything is ok we will open image chooser
@@ -60,7 +68,7 @@ public class BookRegister extends AppCompatActivity {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
 
                 //displaying selected image to imageview
-                imageView.setImageBitmap(bitmap);
+                btnImage.setImageBitmap(bitmap);
 
                 //calling the method uploadBitmap to upload image
                 uploadBitmap(bitmap);
@@ -102,6 +110,7 @@ public class BookRegister extends AppCompatActivity {
     }
 
     private void uploadBitmap(final Bitmap bitmap) {
+
         //our custom volley request
         VolleyMulitipartRequest volleyMultipartRequest = new VolleyMulitipartRequest(Request.Method.POST, BookRegister_EndPoints.UPLOAD_URL,
                 new Response.Listener<NetworkResponse>() {

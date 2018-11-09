@@ -29,17 +29,12 @@
         android:layout_marginBottom="15dp"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <ImageButton
+            android:id="@+id/btnImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:src="@drawable/bookplus"
             />
-
-        <Button
-            android:id="@+id/btnImageUpload"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="책 이미지 업로드"/>
 
     </LinearLayout>
 
