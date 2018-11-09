@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import java.util.Map;
 
 public class BookRegister extends AppCompatActivity {
     ImageView imageView;
+    Button btnImageUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +36,12 @@ public class BookRegister extends AppCompatActivity {
         setContentView(R.layout.activity_book_register);
 
         imageView = (ImageView) findViewById(R.id.imageView);
+        btnImageUpload = (Button) findViewById(R.id.btnImageUpload);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+        btnImageUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //if everything is ok we will open image chooser
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, 100);
             }
@@ -45,6 +49,7 @@ public class BookRegister extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
 
@@ -54,7 +59,7 @@ public class BookRegister extends AppCompatActivity {
                 //getting bitmap object from uri
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
 
-                //displaying selected image to imageView
+                //displaying selected image to imageview
                 imageView.setImageBitmap(bitmap);
 
                 //calling the method uploadBitmap to upload image
@@ -64,6 +69,22 @@ public class BookRegister extends AppCompatActivity {
             }
         }
     }
+//    private void cropImage() {
+//        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+//        //indicate image type and Uri of image
+//        cropIntent.setDataAndType(imageUri, "image/*");
+//        //set crop properties
+//        cropIntent.putExtra("crop", "true");
+//        //indicate aspect of desired crop
+//        cropIntent.putExtra("aspectX", 1);
+//        cropIntent.putExtra("aspectY", 1);
+//        //indicate output X and Y
+//        cropIntent.putExtra("outputX", 256);
+//        cropIntent.putExtra("outputY", 256);
+//        //retrieve data on return
+//        cropIntent.putExtra("return-data", true);
+//        startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
+//    }
 
     /*
      * The method is taking Bitmap as an argument

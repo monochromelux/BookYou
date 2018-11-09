@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,6 +60,28 @@ public class Login extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
  //       myToolbar.setOutlineProvider (null);
+
+        nameJoinText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                switch (keyCode){
+                    case KeyEvent.KEYCODE_ENTER:
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        passwordLoginText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                switch (keyCode){
+                    case KeyEvent.KEYCODE_ENTER:
+                        return true;
+                }
+                return false;
+            }
+        });
 
         btnTopLog.setOnClickListener(new View.OnClickListener() {
             @Override
