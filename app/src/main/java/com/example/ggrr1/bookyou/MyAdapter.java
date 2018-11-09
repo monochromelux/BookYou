@@ -43,10 +43,10 @@ public class MyAdapter extends BaseAdapter{
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
         ImageView bookImage = (ImageView) convertView.findViewById(R.id.bookImage) ;
-        TextView bookName = (TextView) convertView.findViewById(R.id.bookName) ;
+        TextView bookName = (TextView) convertView.findViewById(R.id.name) ;
         TextView author = (TextView) convertView.findViewById(R.id.author) ;
         TextView price = (TextView) convertView.findViewById(R.id.price) ;
-        TextView salePrice = (TextView) convertView.findViewById(R.id.salePrice) ;
+        TextView salePrice = (TextView) convertView.findViewById(R.id.sale_price) ;
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
         ItemData myItem = getItem(position);
