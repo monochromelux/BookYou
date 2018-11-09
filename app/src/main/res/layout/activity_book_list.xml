@@ -41,8 +41,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/listview"
-                android:dividerHeight="10dp"
-                android:divider="#DEDEDE">
+                android:dividerHeight="0dp"
+                android:divider="#FFF">
+
             </ListView>
         </LinearLayout>
     </ScrollView>
