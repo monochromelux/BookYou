@@ -14,6 +14,8 @@ public class BookList extends AppCompatActivity {
 
     Button register;
     ListView booklist;
+    String user_id = "1";
+    String img_path, name, author, price, sale_price, created;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,29 +38,54 @@ public class BookList extends AppCompatActivity {
         booklist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(getApplicationContext(), BookDetail.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
             }
         });
     }
+//
+//    public void request() {
+//        RequestQueue queue = Volley.newRequestQueue(this);
+//        String url = "http://211.213.95.132/mybookstore/book_list.php";
+//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+//            @Override
+//            public void onResponse(JSONArray response) {
+//                try {
+//                    for(int i=0; i<response.length(); i++) {
+//                        JSONObject list = response.getJSONObject(i);
+//                        name = list.getString("name");
+//                        author = list.getString("author");
+//                        price = list.getString("price");
+//                        sale_price = list.getString("sale_price");
+//                        created = list.getString("created");
+//                        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
+//                                name, author, price, sale_price, created);
+//                    }
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, null);
+//        queue.add(jsonArrayRequest);
+//    }
 
     private void dataSetting(){
 
         MyAdapter mMyAdapter = new MyAdapter();
 
         mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "리눅스 프로그래밍", "김성우, 이중화, 이종민", "28,000원", "15,400원");
+                "리눅스 프로그래밍", "김성우, 이중화, 이종민",
+                28000 + "원", 15400 + "원 (" + 45 + "% 할인)", "2018-11-10");
         mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test1", "김성우, 이중화, 이종민", "28,000원", "15,400원");
+                "test1", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
         mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test2", "김성우, 이중화, 이종민", "28,000원", "15,400원");
+                "test2", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
         mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test3", "김성우, 이중화, 이종민", "28,000원", "15,400원");
+                "test3", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
         mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test4", "김성우, 이중화, 이종민", "28,000원", "15,400원");
-        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test5", "김성우, 이중화, 이종민", "28,000원", "15,400원");
-        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test6", "김성우, 이중화, 이종민", "28,000원", "15,400원");
+                "test4", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
         /* 리스트뷰에 어댑터 등록 */
         booklist.setAdapter(mMyAdapter);
     }

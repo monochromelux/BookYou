@@ -4,17 +4,26 @@ import android.graphics.drawable.Drawable;
 
 public class ItemData {
     public Drawable bookImage;
-    public String bookName;
+    public String name;
     public String author;
     public String price;
-    public String salePrice;
+    public String sale_price;
+    public String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getBookName() {
-        return bookName;
+        return name;
     }
 
     public void setBookName(String bookName) {
-        this.bookName = bookName;
+        this.name = bookName;
     }
 
     public String getAuthor() {
@@ -34,11 +43,11 @@ public class ItemData {
     }
 
     public String getSalePrice() {
-        return salePrice;
+        return sale_price;
     }
 
     public void setSalePrice(String salePrice) {
-        this.salePrice = salePrice;
+        this.sale_price = salePrice;
     }
 
     public Drawable getBookImage() {

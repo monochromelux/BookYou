@@ -43,20 +43,22 @@ public class MyAdapter extends BaseAdapter{
 
         /* 'listview_custom'에 정의된 위젯에 대한 참조 획득 */
         ImageView bookImage = (ImageView) convertView.findViewById(R.id.bookImage) ;
-        TextView bookName = (TextView) convertView.findViewById(R.id.name) ;
+        TextView name = (TextView) convertView.findViewById(R.id.name) ;
         TextView author = (TextView) convertView.findViewById(R.id.author) ;
         TextView price = (TextView) convertView.findViewById(R.id.price) ;
-        TextView salePrice = (TextView) convertView.findViewById(R.id.sale_price) ;
+        TextView sale_price = (TextView) convertView.findViewById(R.id.sale_price) ;
+        TextView date = (TextView) convertView.findViewById(R.id.date) ;
 
         /* 각 리스트에 뿌려줄 아이템을 받아오는데 mMyItem 재활용 */
         ItemData myItem = getItem(position);
 
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
         bookImage.setImageDrawable(myItem.getBookImage());
-        bookName.setText(myItem.getBookName());
+        name.setText(myItem.getBookName());
         author.setText(myItem.getAuthor());
         price.setText(myItem.getPrice());
-        salePrice.setText(myItem.getSalePrice());
+        sale_price.setText(myItem.getSalePrice());
+        date.setText(myItem.getDate());
 
         /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..)  */
 
@@ -65,19 +67,19 @@ public class MyAdapter extends BaseAdapter{
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(Drawable bookImage, String bookName, String author ,String price, String salePrice) {
+    public void addItem(Drawable bookImage, String name, String author ,String price, String sale_price, String date) {
 
         ItemData mItem = new ItemData();
 
         /* MyItem에 아이템을 setting한다. */
         mItem.setBookImage(bookImage);
-        mItem.setBookName(bookName);
+        mItem.setBookName(name);
         mItem.setAuthor(author);
         mItem.setPrice(price);
-        mItem.setSalePrice(salePrice);
+        mItem.setSalePrice(sale_price);
+        mItem.setDate(date);
 
         /* mItems에 MyItem을 추가한다. */
         mItems.add(mItem);
-
     }
 }
