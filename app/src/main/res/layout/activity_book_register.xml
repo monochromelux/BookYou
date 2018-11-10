@@ -223,5 +223,4 @@
                 android:typeface="sans" />
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
