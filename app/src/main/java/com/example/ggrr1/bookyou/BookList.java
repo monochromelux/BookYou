@@ -10,17 +10,22 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.StringRequest;
+
 public class BookList extends AppCompatActivity {
 
     Button register;
     ListView booklist;
-    String user_id = "1";
+    int user_id;
     String img_path, name, author, price, sale_price, created;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
+
+        Intent intent = getIntent();
+        user_id = intent.getIntExtra("user_id",1);
 
         booklist = (ListView) findViewById(R.id.listview);
         register = (Button) findViewById(R.id.register);
@@ -31,6 +36,7 @@ public class BookList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), BookRegister.class);
+                intent.putExtra("user_id",user_id);
                 startActivity(intent);
             }
         });
@@ -39,7 +45,7 @@ public class BookList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), BookDetail.class);
-                intent.putExtra("id", id);
+                intent.putExtra("user_id",user_id);
                 startActivity(intent);
             }
         });

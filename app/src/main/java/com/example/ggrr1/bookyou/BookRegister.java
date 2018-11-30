@@ -20,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -46,12 +47,18 @@ import java.util.Map;
 
 public class BookRegister extends AppCompatActivity {
     ImageButton btnImage;
-    EditText name, author, publishHouse, subject, professor, price, salePrice;
+    EditText Name, Author, PublishHouse, Subject, Professor, Price, SalePrice;
+    Button btnRegister;
+
+    private Bitmap bitmap;
 
     private static final int PICK_FROM_CAMERA = 1; //카메라 촬영으로 사진 가져오기
     private static final int PICK_FROM_ALBUM = 2; //앨범에서 사진 가져오기
     private static final int CROP_FROM_CAMERA = 3; //가져온 사진을 자르기 위한 변수
+    final static private String URL = "http://211.213.95.132/mybookstore/book_register.php";
     Uri img_path;
+
+    private int user_id;
 
     private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}; //권한 설정 변수
     private static final int MULTIPLE_PERMISSIONS = 101; //권한 동의 여부 문의 후 CallBack 함수에 쓰일 변수
@@ -60,17 +67,23 @@ public class BookRegister extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_register);
+        Intent intent = getIntent();
+        user_id = intent.getIntExtra("user_id",1);
+
         checkPermissions();
 
         btnImage = (ImageButton) findViewById(R.id.btnImage);
 
-        name = (EditText) findViewById(R.id.name);
-        author = (EditText) findViewById(R.id.author);
-        publishHouse = (EditText) findViewById(R.id.publisher);
-        subject = (EditText) findViewById(R.id.subject);
-        professor = (EditText) findViewById(R.id.professor);
-        price = (EditText) findViewById(R.id.price);
-        salePrice = (EditText) findViewById(R.id.sale_price);
+        Name = (EditText) findViewById(R.id.name);
+        Author = (EditText) findViewById(R.id.author);
+        PublishHouse = (EditText) findViewById(R.id.publisher);
+        Subject = (EditText) findViewById(R.id.subject);
+        Professor = (EditText) findViewById(R.id.professor);
+        Price = (EditText) findViewById(R.id.price);
+        SalePrice = (EditText) findViewById(R.id.sale_price);
+
+        btnRegister = (Button) findViewById(R.id.btnRegister);
+
         btnImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +119,26 @@ public class BookRegister extends AppCompatActivity {
                         .setNeutralButton("앨범선택", albumListener)
                         .setNegativeButton("취소", cancelListener)
                         .show();
+            }
+        });
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean Value = false;
+                if(Name.getText().toString().isEmpty()){
+                    Value = false;
+                    Toast.makeText(getApplicationContext(),"이름을 등록해주세요.",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if(Price.getText().toString().isEmpty() || SalePrice.getText().toString().isEmpty()) {
+                        Value = false;
+                        Toast.makeText(getApplicationContext(), "가격정보를 등록해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        uploadBitmap(bitmap);
+                    }
+                }
             }
         });
 
@@ -214,7 +247,7 @@ public class BookRegister extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
-            Toast.makeText(BookRegister.this, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(BookRegister.this, "오류가 발생하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
         }
         if (requestCode == PICK_FROM_ALBUM) {
             if(data==null){
@@ -233,16 +266,14 @@ public class BookRegister extends AppCompatActivity {
         } else if (requestCode == CROP_FROM_CAMERA) {
             try { //저는 bitmap 형태의 이미지로 가져오기 위해 아래와 같이 작업하였으며 Thumbnail을 추출하였습니다.
 
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), img_path);
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), img_path);
                 Bitmap thumbImage = ThumbnailUtils.extractThumbnail(bitmap, 1000, 1000);
                 ByteArrayOutputStream bs = new ByteArrayOutputStream();
                 thumbImage.compress(Bitmap.CompressFormat.JPEG, 100, bs); //이미지가 클 경우 OutOfMemoryException 발생이 예상되어 압축
 
 
                 //여기서는 ImageView에 setImageBitmap을 활용하여 해당 이미지에 그림을 띄우시면 됩니다.
-
                 btnImage.setImageBitmap(thumbImage);
-                uploadBitmap(thumbImage);
 
             } catch (Exception e) {
                 Log.e("ERROR", e.getMessage().toString());
@@ -263,7 +294,7 @@ public class BookRegister extends AppCompatActivity {
             Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            Toast.makeText(this, "용량이 큰 사진의 경우 시간이 오래 걸릴 수 있습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "잠시만 기다려주세요.", Toast.LENGTH_SHORT).show();
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.putExtra("crop", "true");
@@ -318,20 +349,43 @@ public class BookRegister extends AppCompatActivity {
      * */
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
     private void uploadBitmap(final Bitmap bitmap) {
 
+        final String str_user_id = Integer.toString(user_id);
+        final String name = Name.getText().toString();
+        final String author = Author.getText().toString();
+        final String publishHouse = PublishHouse.getText().toString();
+        final String subject = Subject.getText().toString();
+        final String professor = Professor.getText().toString();
+        final String price = Price.getText().toString();
+        final String salePrice = SalePrice.getText().toString();
+
         //our custom volley request
-        VolleyMulitipartRequest volleyMultipartRequest = new VolleyMulitipartRequest(Request.Method.POST, BookRegister_EndPoints.UPLOAD_URL,
+        VolleyMulitipartRequest volleyMultipartRequest = new VolleyMulitipartRequest(Request.Method.POST, URL,
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
                         try {
                             JSONObject obj = new JSONObject(new String(response.data));
-                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                            int book_detail_status = obj.getInt("book_detail_status");
+
+                            if(book_detail_status == 1){
+                                Toast.makeText(getApplicationContext(),"책이 등록되었습니다.",Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), BookList.class);
+                                startActivity(intent);
+                                finish();
+                            }else if(book_detail_status == 2){
+                                AlertDialog.Builder builder = new AlertDialog.Builder(BookRegister.this);
+                                builder.setMessage("책 등록에 실패하였습니다.")
+                                        .setNegativeButton("AGAIN", null)
+                                        .create()
+                                        .show();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -353,6 +407,15 @@ public class BookRegister extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
+
+                params.put("str_user_id", str_user_id);
+                params.put("name", name);
+                params.put("author", author);
+                params.put("publishHouse", publishHouse);
+                params.put("subject", subject);
+                params.put("professor",professor);
+                params.put("price", price);
+                params.put("salePrice", salePrice);
                 return params;
             }
 
@@ -362,8 +425,8 @@ public class BookRegister extends AppCompatActivity {
             @Override
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
-                long imageViewName = System.currentTimeMillis();
-                params.put("pic", new DataPart(imageViewName + ".png", getFileDataFromDrawable(bitmap)));
+                long imageButtonName = System.currentTimeMillis();
+                params.put("img_path", new DataPart(imageButtonName + ".jpg", getFileDataFromDrawable(bitmap)));
                 return params;
             }
         };
@@ -371,4 +434,21 @@ public class BookRegister extends AppCompatActivity {
         //adding the request to volley
         Volley.newRequestQueue(this).add(volleyMultipartRequest);
     }
+
+    private final long FINISH_INTERVAL_TIME = 2000;
+    private long backPressedTime = 0;
+
+    @Override
+    public void onBackPressed() {
+        long tempTime = System.currentTimeMillis();
+        long intervalTime = tempTime - backPressedTime;
+
+        if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
+            super.onBackPressed();
+        } else {
+            backPressedTime = tempTime;
+            Toast.makeText(this, "한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

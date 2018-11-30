@@ -31,9 +31,6 @@ public class Login extends AppCompatActivity {
 
     GridLayout layLog, layJoin;
 
-    String color_black = "#000000";
-    String color_pink = "#FE393A";
-
     Toolbar myToolbar;
 
     @Override
@@ -124,9 +121,11 @@ public class Login extends AppCompatActivity {
                             int login_status = jsonResponse.getInt("login_status");
 
                             if(login_status == 1){
-                              Intent intent = new Intent(getApplicationContext(), BookList.class);
-                               startActivity(intent);
-                               finish();
+                                int user_id = jsonResponse.getInt("user_id");
+                                Intent intent = new Intent(getApplicationContext(), BookList.class);
+                                intent.putExtra("user_id",user_id);
+                                startActivity(intent);
+                                finish();
                             }else if(login_status == 2){
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
                                 builder.setMessage("존재하는 이메일이 없습니다.")
