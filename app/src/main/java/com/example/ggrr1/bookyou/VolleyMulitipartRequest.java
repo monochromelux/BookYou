@@ -49,7 +49,7 @@ public class VolleyMulitipartRequest extends Request<NetworkResponse> {
             // populate text payload
             Map<String, String> params = getParams();
             if (params != null && params.size() > 0) {
-                textParse(dos, params, getParamsEncoding());
+                textParse(dos, params, "UTF-8");
             }
 
             // populate data byte payload

@@ -47,7 +47,7 @@ import java.util.Map;
 
 public class BookRegister extends AppCompatActivity {
     ImageButton btnImage;
-    EditText Name, Author, PublishHouse, Subject, Professor, Price, SalePrice;
+    EditText Name, Author, Publisher, Published_date, Subject, Professor, Price, SalePrice;
     Button btnRegister;
 
     private Bitmap bitmap;
@@ -76,7 +76,8 @@ public class BookRegister extends AppCompatActivity {
 
         Name = (EditText) findViewById(R.id.name);
         Author = (EditText) findViewById(R.id.author);
-        PublishHouse = (EditText) findViewById(R.id.publisher);
+        Publisher = (EditText) findViewById(R.id.publisher);
+        Published_date = (EditText) findViewById(R.id.published_date);
         Subject = (EditText) findViewById(R.id.subject);
         Professor = (EditText) findViewById(R.id.professor);
         Price = (EditText) findViewById(R.id.price);
@@ -274,6 +275,7 @@ public class BookRegister extends AppCompatActivity {
 
                 //여기서는 ImageView에 setImageBitmap을 활용하여 해당 이미지에 그림을 띄우시면 됩니다.
                 btnImage.setImageBitmap(thumbImage);
+                Toast.makeText(getApplicationContext(),String.valueOf(img_path),Toast.LENGTH_SHORT).show();
 
             } catch (Exception e) {
                 Log.e("ERROR", e.getMessage().toString());
@@ -349,20 +351,20 @@ public class BookRegister extends AppCompatActivity {
      * */
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
     private void uploadBitmap(final Bitmap bitmap) {
 
-        final String str_user_id = Integer.toString(user_id);
         final String name = Name.getText().toString();
         final String author = Author.getText().toString();
-        final String publishHouse = PublishHouse.getText().toString();
+        final String publisher = Publisher.getText().toString();
+        final String published_date = Published_date.getText().toString();
         final String subject = Subject.getText().toString();
         final String professor = Professor.getText().toString();
         final String price = Price.getText().toString();
-        final String salePrice = SalePrice.getText().toString();
+        final String sale_price = SalePrice.getText().toString();
 
         //our custom volley request
         VolleyMulitipartRequest volleyMultipartRequest = new VolleyMulitipartRequest(Request.Method.POST, URL,
@@ -408,14 +410,15 @@ public class BookRegister extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
 
-                params.put("str_user_id", str_user_id);
+                params.put("user_id", String.valueOf(user_id));
                 params.put("name", name);
                 params.put("author", author);
-                params.put("publishHouse", publishHouse);
+                params.put("publisher", publisher);
+                params.put("published_date",published_date);
                 params.put("subject", subject);
                 params.put("professor",professor);
                 params.put("price", price);
-                params.put("salePrice", salePrice);
+                params.put("sale_price", sale_price);
                 return params;
             }
 
@@ -426,7 +429,7 @@ public class BookRegister extends AppCompatActivity {
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
                 long imageButtonName = System.currentTimeMillis();
-                params.put("img_path", new DataPart(imageButtonName + ".jpg", getFileDataFromDrawable(bitmap)));
+                params.put("img_path", new DataPart(imageButtonName + ".png", getFileDataFromDrawable(bitmap)));
                 return params;
             }
         };
