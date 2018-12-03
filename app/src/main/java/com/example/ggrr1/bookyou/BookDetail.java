@@ -14,6 +14,7 @@ import java.util.Map;
 public class BookDetail extends AppCompatActivity {
     EditText name;
     String book_id;
+    int user_id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,7 @@ public class BookDetail extends AppCompatActivity {
         name = (EditText) findViewById(R.id.name);
 
         Intent intent = getIntent();
-        book_id = intent.getStringExtra("book_id");
+        user_id = intent.getIntExtra("user_id", 1);
 
 
     }

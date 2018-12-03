@@ -22,7 +22,7 @@ public class BookList extends AppCompatActivity {
 
     Button register;
     ListView booklist;
-    String user_id = "1";
+    int user_id;
     int book_id;
     String img_path, name, author, price, sale_price, created;
     MyAdapter mMyAdapter = new MyAdapter();
@@ -33,6 +33,7 @@ public class BookList extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
 
         Intent intent = getIntent();
+        user_id = intent.getIntExtra("user_id", 1);
 
         booklist = (ListView) findViewById(R.id.listview);
         register = (Button) findViewById(R.id.register);
@@ -43,7 +44,7 @@ public class BookList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), BookRegister.class);
-                intent.putExtra("user_id",user_id);
+                intent.putExtra("user_id", user_id);
                 startActivity(intent);
             }
         });
@@ -52,7 +53,7 @@ public class BookList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), BookDetail.class);
-                intent.putExtra("user_id",user_id);
+                intent.putExtra("user_id", user_id);
                 startActivity(intent);
             }
         });
@@ -65,6 +66,9 @@ public class BookList extends AppCompatActivity {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
                     JSONArray book_list = jsonResponse.getJSONArray("book_list");
+                    System.out.println(book_list);
+                    System.out.println(user_id);
+
                     for(int i=0; i<book_list.length(); i++) {
                         String name = book_list.getJSONObject(i).getString("name");
                         String author = book_list.getJSONObject(i).getString("author");
@@ -79,7 +83,7 @@ public class BookList extends AppCompatActivity {
                 }
             }
         };
-        ListRequest listRequest = new ListRequest("1", responseListener);
+        ListRequest listRequest = new ListRequest(String.valueOf(user_id), responseListener);
         RequestQueue queue = Volley.newRequestQueue(BookList.this);
         queue.add(listRequest);
 //        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
