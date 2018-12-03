@@ -10,14 +10,22 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class BookList extends AppCompatActivity {
 
     Button register;
     ListView booklist;
-    int user_id;
+    String user_id = "1";
+    int book_id;
     String img_path, name, author, price, sale_price, created;
+    MyAdapter mMyAdapter = new MyAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +33,6 @@ public class BookList extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
 
         Intent intent = getIntent();
-        user_id = intent.getIntExtra("user_id",1);
 
         booklist = (ListView) findViewById(R.id.listview);
         register = (Button) findViewById(R.id.register);
@@ -50,48 +57,42 @@ public class BookList extends AppCompatActivity {
             }
         });
     }
-//
-//    public void request() {
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//        String url = "http://211.213.95.132/mybookstore/book_list.php";
-//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-//            @Override
-//            public void onResponse(JSONArray response) {
-//                try {
-//                    for(int i=0; i<response.length(); i++) {
-//                        JSONObject list = response.getJSONObject(i);
-//                        name = list.getString("name");
-//                        author = list.getString("author");
-//                        price = list.getString("price");
-//                        sale_price = list.getString("sale_price");
-//                        created = list.getString("created");
-//                        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-//                                name, author, price, sale_price, created);
-//                    }
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, null);
-//        queue.add(jsonArrayRequest);
-//    }
 
     private void dataSetting(){
-
-        MyAdapter mMyAdapter = new MyAdapter();
-
-        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "리눅스 프로그래밍", "김성우, 이중화, 이종민",
-                28000 + "원", 15400 + "원 (" + 45 + "% 할인)", "2018-11-10");
-        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test1", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
-        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test2", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
-        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test3", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
-        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
-                "test4", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    JSONArray book_list = jsonResponse.getJSONArray("book_list");
+                    for(int i=0; i<book_list.length(); i++) {
+                        String name = book_list.getJSONObject(i).getString("name");
+                        String author = book_list.getJSONObject(i).getString("author");
+                        String price = book_list.getJSONObject(i).getString("price");
+                        String sale_price = book_list.getJSONObject(i).getString("sale_price");
+                        String created = book_list.getJSONObject(i).getString("created");
+                        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
+                                name, author, price, sale_price, created);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        ListRequest listRequest = new ListRequest("1", responseListener);
+        RequestQueue queue = Volley.newRequestQueue(BookList.this);
+        queue.add(listRequest);
+//        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
+//                "리눅스 프로그래밍", "김성우, 이중화, 이종민",
+//                28000 + "원", 15400 + "원 (" + 45 + "% 할인)", "2018-11-10");
+//        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
+//                "test1", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
+//        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
+//                "test2", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
+//        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
+//                "test3", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
+//        mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.logo),
+//                "test4", "김성우, 이중화, 이종민", "28,000원", "15,400원", "2018-11-10");
         /* 리스트뷰에 어댑터 등록 */
         booklist.setAdapter(mMyAdapter);
     }
