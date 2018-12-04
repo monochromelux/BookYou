@@ -4,11 +4,21 @@ import android.graphics.drawable.Drawable;
 
 public class ItemData {
     public Drawable bookImage;
+
+    public String book_id;
     public String name;
     public String author;
     public String price;
     public String sale_price;
     public String date;
+
+    public String getBook_id() {
+        return book_id;
+    }
+
+    public void setBook_id(String book_id) {
+        this.book_id = book_id;
+    }
 
     public String getDate() {
         return date;

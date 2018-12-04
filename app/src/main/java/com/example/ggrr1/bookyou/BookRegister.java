@@ -25,14 +25,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -41,14 +37,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BookRegister extends AppCompatActivity {
     ImageButton btnImage;
-    EditText Name, Author, Publisher, Published_date, Subject, Professor, Price, SalePrice;
+    EditText editName, editAuthor, editPublisher, editPublishedDate, editSubject, editProfessor, editPrice, editSalePrice, editDescription;
     Button btnRegister;
+
+    String image_path, name, author, publisher, published_date, subject, professor, price, sale_price, description;
 
     private Bitmap bitmap;
 
@@ -74,14 +70,17 @@ public class BookRegister extends AppCompatActivity {
 
         btnImage = (ImageButton) findViewById(R.id.btnImage);
 
-        Name = (EditText) findViewById(R.id.name);
-        Author = (EditText) findViewById(R.id.author);
-        Publisher = (EditText) findViewById(R.id.publisher);
-        Published_date = (EditText) findViewById(R.id.published_date);
-        Subject = (EditText) findViewById(R.id.subject);
-        Professor = (EditText) findViewById(R.id.professor);
-        Price = (EditText) findViewById(R.id.price);
-        SalePrice = (EditText) findViewById(R.id.sale_price);
+        editName = (EditText) findViewById(R.id.name);
+        editAuthor = (EditText) findViewById(R.id.author);
+        editPublisher = (EditText) findViewById(R.id.publisher);
+        editPublishedDate = (EditText) findViewById(R.id.published_date);
+        editSubject = (EditText) findViewById(R.id.subject);
+        editProfessor = (EditText) findViewById(R.id.professor);
+        editPrice = (EditText) findViewById(R.id.price);
+        editSalePrice = (EditText) findViewById(R.id.sale_price);
+        editDescription = (EditText) findViewById(R.id.description);
+
+        image_path = "";
 
         btnRegister = (Button) findViewById(R.id.btnRegister);
 
@@ -127,17 +126,17 @@ public class BookRegister extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 boolean Value = false;
-                if(Name.getText().toString().isEmpty()){
+                if(editName.getText().toString().isEmpty()){
                     Value = false;
                     Toast.makeText(getApplicationContext(),"이름을 등록해주세요.",Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    if(Price.getText().toString().isEmpty() || SalePrice.getText().toString().isEmpty()) {
+                    if(editPrice.getText().toString().isEmpty() || editSalePrice.getText().toString().isEmpty()) {
                         Value = false;
                         Toast.makeText(getApplicationContext(), "가격정보를 등록해주세요.", Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        uploadBitmap(bitmap);
+                        registerBook();
                     }
                 }
             }
@@ -355,103 +354,43 @@ public class BookRegister extends AppCompatActivity {
         return byteArrayOutputStream.toByteArray();
     }
 
-    private void uploadBitmap(final Bitmap bitmap) {
+    private void registerBook() {
 
-        final String name = Name.getText().toString();
-        final String author = Author.getText().toString();
-        final String publisher = Publisher.getText().toString();
-        final String published_date = Published_date.getText().toString();
-        final String subject = Subject.getText().toString();
-        final String professor = Professor.getText().toString();
-        final String price = Price.getText().toString();
-        final String sale_price = SalePrice.getText().toString();
+        name = editName.getText().toString();
+        author = editAuthor.getText().toString();
+        publisher = editPublisher.getText().toString();
+        published_date = editPublishedDate.getText().toString();
+        subject = editSubject.getText().toString();
+        professor = editProfessor.getText().toString();
+        price = editPrice.getText().toString();
+        sale_price = editSalePrice.getText().toString();
+        description = editDescription.getText().toString();
 
-        //our custom volley request
-        VolleyMulitipartRequest volleyMultipartRequest = new VolleyMulitipartRequest(Request.Method.POST, URL,
-                new Response.Listener<NetworkResponse>() {
-                    @Override
-                    public void onResponse(NetworkResponse response) {
-                        try {
-                            JSONObject obj = new JSONObject(new String(response.data));
-
-                            int book_detail_status = obj.getInt("book_detail_status");
-
-                            if(book_detail_status == 1){
-                                Toast.makeText(getApplicationContext(),"책이 등록되었습니다.",Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), BookList.class);
-                                startActivity(intent);
-                                finish();
-                            }else if(book_detail_status == 2){
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BookRegister.this);
-                                builder.setMessage("책 등록에 실패하였습니다.")
-                                        .setNegativeButton("AGAIN", null)
-                                        .create()
-                                        .show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-
-            /*
-             * If you want to add more parameters with the image
-             * you can do it here
-             * here we have only one parameter with the image
-             * which is tags
-             * */
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
 
-                params.put("user_id", String.valueOf(user_id));
-                params.put("name", name);
-                params.put("author", author);
-                params.put("publisher", publisher);
-                params.put("published_date",published_date);
-                params.put("subject", subject);
-                params.put("professor",professor);
-                params.put("price", price);
-                params.put("sale_price", sale_price);
-                return params;
-            }
+                    int book_detail_status = jsonResponse.getInt("book_detail_status");
 
-            /*
-             * Here we are passing image by renaming it with a unique name
-             * */
-            @Override
-            protected Map<String, DataPart> getByteData() {
-                Map<String, DataPart> params = new HashMap<>();
-                long imageButtonName = System.currentTimeMillis();
-                params.put("img_path", new DataPart(imageButtonName + ".png", getFileDataFromDrawable(bitmap)));
-                return params;
+                    if(book_detail_status == 1){
+                        Toast.makeText(getApplicationContext(),"책이 등록되었습니다.",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), BookList.class);
+                        intent.putExtra("user_id",user_id);
+                        startActivity(intent);
+                        finish();
+                    }else if(book_detail_status == 2){
+                        Toast.makeText(getApplicationContext(),"서버와 연결이 원활하지 않습니다.",Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         };
 
-        //adding the request to volley
-        Volley.newRequestQueue(this).add(volleyMultipartRequest);
+        RegisterRequest registerRequest = new RegisterRequest(String.valueOf(user_id), image_path, name, author, publisher, published_date, subject, professor, price, sale_price, description, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(BookRegister.this);
+        queue.add(registerRequest);
     }
-//
-//    private final long FINISH_INTERVAL_TIME = 2000;
-//    private long backPressedTime = 0;
-//
-//    @Override
-//    public void onBackPressed() {
-//        long tempTime = System.currentTimeMillis();
-//        long intervalTime = tempTime - backPressedTime;
-//
-//        if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
-//            super.onBackPressed();
-//        } else {
-//            backPressedTime = tempTime;
-//            Toast.makeText(this, "한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
 }
