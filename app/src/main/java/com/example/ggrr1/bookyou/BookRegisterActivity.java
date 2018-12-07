@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class BookRegister extends AppCompatActivity {
+public class BookRegisterActivity extends AppCompatActivity {
     ImageButton btnImage;
     EditText editName, editAuthor, editPublisher, editPublishedDate, editSubject, editProfessor, editPrice, editSalePrice, editDescription;
     Button btnRegister;
@@ -113,7 +113,7 @@ public class BookRegister extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 };
-                new AlertDialog.Builder(BookRegister.this)
+                new AlertDialog.Builder(BookRegisterActivity.this)
                         .setTitle("책 이미지 선택")
                         .setPositiveButton("사진촬영", cameraListener)
                         .setNeutralButton("앨범선택", albumListener)
@@ -207,10 +207,10 @@ public class BookRegister extends AppCompatActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException e) {
-            Toast.makeText(BookRegister.this, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show();              finish();
+            Toast.makeText(BookRegisterActivity.this, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show();              finish();
         }
         if (photoFile != null) {
-            img_path = FileProvider.getUriForFile(BookRegister.this,
+            img_path = FileProvider.getUriForFile(BookRegisterActivity.this,
                     "com.example.ggrr1.bookyou.provider", photoFile); //FileProvider의 경우 이전 포스트를 참고하세요.
             intent.putExtra(MediaStore.EXTRA_OUTPUT, img_path); //사진을 찍어 해당 Content uri를 photoUri에 적용시키기 위함
             startActivityForResult(intent, PICK_FROM_CAMERA);
@@ -247,7 +247,7 @@ public class BookRegister extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
-            Toast.makeText(BookRegister.this, "오류가 발생하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(BookRegisterActivity.this, "오류가 발생하였습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
         }
         if (requestCode == PICK_FROM_ALBUM) {
             if(data==null){
@@ -257,7 +257,7 @@ public class BookRegister extends AppCompatActivity {
             cropImage();
         } else if (requestCode == PICK_FROM_CAMERA) {
             cropImage();
-            MediaScannerConnection.scanFile(BookRegister.this, //앨범에 사진을 보여주기 위해 Scan을 합니다.
+            MediaScannerConnection.scanFile(BookRegisterActivity.this, //앨범에 사진을 보여주기 위해 Scan을 합니다.
                     new String[]{img_path.getPath()}, null,
                     new MediaScannerConnection.OnScanCompletedListener() {
                         public void onScanCompleted(String path, Uri uri) {
@@ -314,7 +314,7 @@ public class BookRegister extends AppCompatActivity {
             File folder = new File(Environment.getExternalStorageDirectory() + "/test/");
             File tempFile = new File(folder.toString(), croppedFileName.getName());
 
-            img_path = FileProvider.getUriForFile(BookRegister.this,
+            img_path = FileProvider.getUriForFile(BookRegisterActivity.this,
                     "com.example.ggrr1.bookyou.provider", tempFile);
 
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -376,7 +376,7 @@ public class BookRegister extends AppCompatActivity {
 
                     if(book_detail_status == 1){
                         Toast.makeText(getApplicationContext(),"책이 등록되었습니다.",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), BookList.class);
+                        Intent intent = new Intent(getApplicationContext(), BookListActivity.class);
                         intent.putExtra("user_id",user_id);
                         startActivity(intent);
                         finish();
@@ -390,7 +390,7 @@ public class BookRegister extends AppCompatActivity {
         };
 
         RegisterRequest registerRequest = new RegisterRequest(String.valueOf(user_id), image_path, name, author, publisher, published_date, subject, professor, price, sale_price, description, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(BookRegister.this);
+        RequestQueue queue = Volley.newRequestQueue(BookRegisterActivity.this);
         queue.add(registerRequest);
     }
 }

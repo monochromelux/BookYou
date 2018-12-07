@@ -24,7 +24,7 @@ import org.json.JSONObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     Button btnTopLog, btnTopJoin;
     Button btnLogin, btnJoin;
     CheckBox checkBox;
@@ -57,10 +57,8 @@ public class Login extends AppCompatActivity {
         final EditText emailLoginText = (EditText) findViewById(R.id.login_email);
         final EditText passwordLoginText = (EditText) findViewById(R.id.login_password);
 
-        myToolbar = (Toolbar) findViewById(R.id.toolbar_title);
+        myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-
- //       myToolbar.setOutlineProvider (null);
 
         nameJoinText.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -111,43 +109,46 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = emailLoginText.getText().toString();
                 final String password = passwordLoginText.getText().toString();
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
 
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
+                                int login_status = jsonResponse.getInt("login_status");
 
-                            int login_status = jsonResponse.getInt("login_status");
-
-                            if(login_status == 1){
-                                int user_id = jsonResponse.getInt("user_id");
-                                Intent intent = new Intent(getApplicationContext(), BookList.class);
-                                intent.putExtra("user_id",user_id);
-                                startActivity(intent);
-                                finish();
-                            }else if(login_status == 2){
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-                                builder.setMessage("존재하는 이메일이 없습니다.")
-                                        .setNegativeButton("AGAIN", null)
-                                        .create()
-                                        .show();
-                            }else if(login_status == 3){
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-                                builder.setMessage("비밀번호가 일치하지 않습니다.")
-                                        .setPositiveButton("AGAIN", null)
-                                        .create()
-                                        .show();
+                                if (login_status == 1) {
+                                    int user_id = jsonResponse.getInt("user_id");
+                                    Intent intent = new Intent(getApplicationContext(), BookListActivity.class);
+                                    intent.putExtra("user_id", user_id);
+                                    startActivity(intent);
+                                    finish();
+                                } else if (login_status == 2) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                    builder.setMessage("존재하는 이메일이 없습니다.")
+                                            .setNegativeButton("AGAIN", null)
+                                            .create()
+                                            .show();
+                                } else if (login_status == 3) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                    builder.setMessage("비밀번호가 일치하지 않습니다.")
+                                            .setPositiveButton("AGAIN", null)
+                                            .create()
+                                            .show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        }catch (Exception e){
-                            e.printStackTrace();
                         }
-                    }
-                };
+                    };
 
-                LoginRequest loginRequest = new LoginRequest(email,password, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(Login.this);
-                queue.add(loginRequest);
+                    LoginRequest loginRequest = new LoginRequest(email, password, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+                    queue.add(loginRequest);
+                }
             }
         });
 
@@ -158,7 +159,6 @@ public class Login extends AppCompatActivity {
                 String password = passwordJoinText.getText().toString();
                 String inputPassTo = inputPassToJoinText.getText().toString();
                 String name = nameJoinText.getText().toString();
-
                 if(isValidValues(email,password,inputPassTo,name)) {
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
                         @Override
@@ -169,7 +169,7 @@ public class Login extends AppCompatActivity {
                                 int join_status = jsonResponse.getInt("join_status");
 
                                 if (join_status == 1) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                     builder.setMessage("회원 가입에 성공했습니다.")
                                             .setPositiveButton("OK", null)
                                             .create()
@@ -177,7 +177,7 @@ public class Login extends AppCompatActivity {
                                     layJoin.setVisibility(View.GONE);
                                     layLog.setVisibility(View.VISIBLE);
                                 } else if (join_status == 2) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                     builder.setMessage("이미 존재하는 이메일입니다.")
                                             .setNegativeButton("AGAIN", null)
                                             .create()
@@ -189,7 +189,7 @@ public class Login extends AppCompatActivity {
                         }
                     };
                     JoinRequest joinRequest = new JoinRequest(email, password, name, responseListener);
-                    RequestQueue queue = Volley.newRequestQueue(Login.this);
+                    RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                     queue.add(joinRequest);
                 }
             }
@@ -230,7 +230,7 @@ public class Login extends AppCompatActivity {
             if (!(email.matches(regExpn)))
             {
                 isResult = false;
-                Toast.makeText(Login.this,"이메일 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this,"이메일 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show();
             }
             else {
                 if (!(inputPassTo.equals(password))) {

@@ -18,7 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BookDetail extends AppCompatActivity {
+public class BookDetailActivity extends AppCompatActivity {
     TextView textName, textAuthor, textPublisher, textPublishedDate, textSubject, textProfessor, textPrice, textSalePrice, textDescription;
     Button btnModify,btnDelete;
 
@@ -50,7 +50,7 @@ public class BookDetail extends AppCompatActivity {
         btnModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), BookUpdate.class);
+                Intent intent = new Intent(getApplicationContext(), BookUpdateActivity.class);
                 intent.putExtra("user_id",user_id);
                 intent.putExtra("book_id", book_id);
                 startActivity(intent);
@@ -74,7 +74,7 @@ public class BookDetail extends AppCompatActivity {
                                             book_detail_status = jsonResponse.getInt("book_detail_status");
                                             if(book_detail_status == 1){
                                                 Toast.makeText(getApplicationContext(),"책이 삭제되었습니다.",Toast.LENGTH_SHORT).show();
-                                                Intent i = new Intent(BookDetail.this, BookList.class);
+                                                Intent i = new Intent(BookDetailActivity.this, BookListActivity.class);
                                                 i.putExtra("user_id",user_id);
                                                 startActivity(i);
                                                 finish();
@@ -88,7 +88,7 @@ public class BookDetail extends AppCompatActivity {
                                     }
                                 };
                                 DeleteRequest deleteRequest = new DeleteRequest(String.valueOf(book_id), responseListener);
-                                RequestQueue queue = Volley.newRequestQueue(BookDetail.this);
+                                RequestQueue queue = Volley.newRequestQueue(BookDetailActivity.this);
                                 queue.add(deleteRequest);
                                 break;
 
@@ -99,7 +99,7 @@ public class BookDetail extends AppCompatActivity {
                     }
                 };
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(BookDetail.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(BookDetailActivity.this);
                 builder.setMessage("정말 삭제하시겠습니까?")
                         .setNegativeButton("Yes", dialogClickListener)
                         .setPositiveButton("No", dialogClickListener).show();
@@ -147,7 +147,7 @@ public class BookDetail extends AppCompatActivity {
             }
         };
         DetailRequest detailRequest = new DetailRequest(String.valueOf(book_id), responseListener);
-        RequestQueue queue = Volley.newRequestQueue(BookDetail.this);
+        RequestQueue queue = Volley.newRequestQueue(BookDetailActivity.this);
         queue.add(detailRequest);
     }
 

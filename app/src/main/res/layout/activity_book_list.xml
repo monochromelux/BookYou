@@ -1,64 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".BookList">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <include
-        android:id="@+id/toolBar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/action_bar"
-        />
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/nav_header_main2"
+            app:menu="@menu/activity_main2_drawer" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="도서 목록"
-        android:background="#FE393A"
-        android:textColor="#FFF"
-        android:textSize="17dp"
-        android:textStyle="bold"
-        android:typeface="sans"
-        android:gravity="center"/>
-
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        tools:context=".BookListActivity">
 
-        <LinearLayout
+        <include
+            android:id="@+id/toolBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/action_bar"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="도서 목록"
+            android:background="#FE393A"
+            android:textColor="#FFF"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            android:gravity="center"/>
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_weight="1"
+            android:fillViewport="true">
 
-            <ListView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/listview"
-                android:dividerHeight="0dp"
-                android:divider="#FFF">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            </ListView>
-        </LinearLayout>
-    </ScrollView>
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listview"
+                    android:dividerHeight="0dp"
+                    android:divider="#FFF">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="도서 등록"
-        android:background="#FE393A"
-        android:textColor="#FFF"
-        android:textSize="17dp"
-        android:textStyle="bold"
-        android:typeface="sans"
-        android:gravity="center"
-        android:id="@+id/register"/>
+                </ListView>
+            </LinearLayout>
+        </ScrollView>
 
-</LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="도서 등록"
+            android:background="#FE393A"
+            android:textColor="#FFF"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            android:gravity="center"
+            android:id="@+id/register"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

@@ -2,7 +2,7 @@ package com.example.ggrr1.bookyou;
 
 import android.graphics.drawable.Drawable;
 
-public class ItemData {
+public class BookListItem {
     public Drawable bookImage;
 
     public String book_id;

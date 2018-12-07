@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/action_bar"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FE393A"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="메시지"
+        android:textColor="#FFF"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_gravity="right"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#767171"
+            android:text="삭제"
+            android:textColor="#000"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/messageListVIew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:choiceMode="multipleChoice"
+        android:dividerHeight="1dp"
+        android:divider="#767171">
+
+    </ListView>
+</LinearLayout>

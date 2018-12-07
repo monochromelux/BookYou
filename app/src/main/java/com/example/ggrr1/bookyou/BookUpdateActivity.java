@@ -17,9 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BookUpdate extends AppCompatActivity {
+public class BookUpdateActivity extends AppCompatActivity {
     EditText editName, editAuthor, editPublisher, editPublishedDate, editSubject, editProfessor, editPrice, editSalePrice, editDescription;
-    Button btnModify;
+    Button btnUpdate;
 
     String book_id, img_path, name, author, publisher, published_date, subject, professor, price, sale_price, description;
     int user_id, book_detail_status;
@@ -43,7 +43,7 @@ public class BookUpdate extends AppCompatActivity {
         editSalePrice = (EditText) findViewById(R.id.sale_price);
         editDescription = (EditText) findViewById(R.id.description);
 
-        btnModify = (Button) findViewById(R.id.btnModify);
+        btnUpdate = (Button) findViewById(R.id.btnUpdate);
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -54,7 +54,7 @@ public class BookUpdate extends AppCompatActivity {
                     book_detail_status = jsonResponse.getInt("book_detail_status");
 
                     if (book_detail_status == 2) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BookUpdate.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BookUpdateActivity.this);
                         builder.setMessage("책 내용을 불러오지 못 했습니다.")
                                 .setNegativeButton("AGAIN", null)
                                 .create()
@@ -91,10 +91,10 @@ public class BookUpdate extends AppCompatActivity {
             }
         };
         DetailRequest detailRequest = new DetailRequest(String.valueOf(book_id), responseListener);
-        RequestQueue queue = Volley.newRequestQueue(BookUpdate.this);
+        RequestQueue queue = Volley.newRequestQueue(BookUpdateActivity.this);
         queue.add(detailRequest);
 
-        btnModify.setOnClickListener(new View.OnClickListener() {
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -138,12 +138,12 @@ public class BookUpdate extends AppCompatActivity {
                     book_detail_status = jsonResponse.getInt("book_detail_status");
                     if (book_detail_status == 1) {
                         Toast.makeText(getApplicationContext(),"책 내용이 수정되었습니다.",Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(getApplicationContext(), BookList.class);
+                        Intent i = new Intent(getApplicationContext(), BookListActivity.class);
                         i.putExtra("user_id",user_id);
                         startActivity(i);
                         finish();
                     }else if(book_detail_status == 2) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BookUpdate.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BookUpdateActivity.this);
                         builder.setMessage("서버와 연결이 원활하지 않습니다.")
                                 .setNegativeButton("AGAIN", null)
                                 .create()
@@ -155,7 +155,7 @@ public class BookUpdate extends AppCompatActivity {
             }
         };
         UpdateRequest updateRequest = new UpdateRequest(book_id, img_path, name, author, publisher, published_date, subject, professor, price, sale_price, description, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(BookUpdate.this);
+        RequestQueue queue = Volley.newRequestQueue(BookUpdateActivity.this);
         queue.add(updateRequest);
 
     }
