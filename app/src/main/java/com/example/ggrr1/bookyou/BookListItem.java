@@ -3,7 +3,8 @@ package com.example.ggrr1.bookyou;
 import android.graphics.drawable.Drawable;
 
 public class BookListItem {
-    public Drawable bookImage;
+
+    public String img_path;
 
     public String book_id;
     public String name;
@@ -60,11 +61,8 @@ public class BookListItem {
         this.sale_price = salePrice;
     }
 
-    public Drawable getBookImage() {
-        return bookImage;
-    }
+    public String getImg_path() { return img_path; }
 
-    public void setBookImage(Drawable bookImage) {
-        this.bookImage = bookImage;
-    }
+    public void setImg_path(String img_path) { this.img_path = img_path; }
+
 }

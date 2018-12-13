@@ -35,7 +35,7 @@ public class BookListActivity extends AppCompatActivity {
     ListView booklist;
     int user_id;
     int book_list_status;
-    String book_id, name, author, price, sale_price, created;
+    String img_path, book_id, name, author, price, sale_price, created;
     BookListAdapter bookListAdapter;
     Toolbar toolbar;
     DrawerLayout drawer;
@@ -93,6 +93,7 @@ public class BookListActivity extends AppCompatActivity {
 
                     JSONArray book_list = jsonResponse.getJSONArray("book_list");
                     for(int i=0; i<book_list.length(); i++) {
+                        img_path = book_list.getJSONObject(i).getString("img_path");
                         book_id = book_list.getJSONObject(i).getString("id");
                         name = book_list.getJSONObject(i).getString("name");
                         author = book_list.getJSONObject(i).getString("author");
@@ -128,27 +129,4 @@ public class BookListActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
-
-    private final long FINISH_INTERVAL_TIME = 2000;
-    private long backPressedTime = 0;
-
-    @Override
-    public void onBackPressed() {
-        long tempTime = System.currentTimeMillis();
-        long intervalTime = tempTime - backPressedTime;
-
-        if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
-            super.onBackPressed();
-        } else {
-            backPressedTime = tempTime;
-            Toast.makeText(this, "한번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
-        }
-
-        if(drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START);
-        }else{
-            super.onBackPressed();
-        }
-    }
-
 }

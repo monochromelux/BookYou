@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 if (login_status == 1) {
                                     int user_id = jsonResponse.getInt("user_id");
-                                    Intent intent = new Intent(getApplicationContext(), BookListActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
                                     intent.putExtra("user_id", user_id);
                                     startActivity(intent);
                                     finish();

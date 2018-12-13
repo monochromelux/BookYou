@@ -44,7 +44,7 @@ public class BookRegisterActivity extends AppCompatActivity {
     EditText editName, editAuthor, editPublisher, editPublishedDate, editSubject, editProfessor, editPrice, editSalePrice, editDescription;
     Button btnRegister;
 
-    String image_path, name, author, publisher, published_date, subject, professor, price, sale_price, description;
+    String img_path, name, author, publisher, published_date, subject, professor, price, sale_price, description;
 
     private Bitmap bitmap;
 
@@ -52,7 +52,7 @@ public class BookRegisterActivity extends AppCompatActivity {
     private static final int PICK_FROM_ALBUM = 2; //앨범에서 사진 가져오기
     private static final int CROP_FROM_CAMERA = 3; //가져온 사진을 자르기 위한 변수
     final static private String URL = "http://211.213.95.132/mybookstore/book_register.php";
-    Uri img_path;
+    Uri imagePath;
 
     private int user_id;
 
@@ -79,8 +79,6 @@ public class BookRegisterActivity extends AppCompatActivity {
         editPrice = (EditText) findViewById(R.id.price);
         editSalePrice = (EditText) findViewById(R.id.sale_price);
         editDescription = (EditText) findViewById(R.id.description);
-
-        image_path = "";
 
         btnRegister = (Button) findViewById(R.id.btnRegister);
 
@@ -210,9 +208,9 @@ public class BookRegisterActivity extends AppCompatActivity {
             Toast.makeText(BookRegisterActivity.this, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show();              finish();
         }
         if (photoFile != null) {
-            img_path = FileProvider.getUriForFile(BookRegisterActivity.this,
+            imagePath = FileProvider.getUriForFile(BookRegisterActivity.this,
                     "com.example.ggrr1.bookyou.provider", photoFile); //FileProvider의 경우 이전 포스트를 참고하세요.
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, img_path); //사진을 찍어 해당 Content uri를 photoUri에 적용시키기 위함
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath); //사진을 찍어 해당 Content uri를 photoUri에 적용시키기 위함
             startActivityForResult(intent, PICK_FROM_CAMERA);
         }
     }
@@ -253,12 +251,12 @@ public class BookRegisterActivity extends AppCompatActivity {
             if(data==null){
                 return;
             }
-            img_path = data.getData();
+            imagePath = data.getData();
             cropImage();
         } else if (requestCode == PICK_FROM_CAMERA) {
             cropImage();
             MediaScannerConnection.scanFile(BookRegisterActivity.this, //앨범에 사진을 보여주기 위해 Scan을 합니다.
-                    new String[]{img_path.getPath()}, null,
+                    new String[]{imagePath.getPath()}, null,
                     new MediaScannerConnection.OnScanCompletedListener() {
                         public void onScanCompleted(String path, Uri uri) {
                         }
@@ -266,7 +264,7 @@ public class BookRegisterActivity extends AppCompatActivity {
         } else if (requestCode == CROP_FROM_CAMERA) {
             try { //저는 bitmap 형태의 이미지로 가져오기 위해 아래와 같이 작업하였으며 Thumbnail을 추출하였습니다.
 
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), img_path);
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imagePath);
                 Bitmap thumbImage = ThumbnailUtils.extractThumbnail(bitmap, 1000, 1000);
                 ByteArrayOutputStream bs = new ByteArrayOutputStream();
                 thumbImage.compress(Bitmap.CompressFormat.JPEG, 100, bs); //이미지가 클 경우 OutOfMemoryException 발생이 예상되어 압축
@@ -274,7 +272,7 @@ public class BookRegisterActivity extends AppCompatActivity {
 
                 //여기서는 ImageView에 setImageBitmap을 활용하여 해당 이미지에 그림을 띄우시면 됩니다.
                 btnImage.setImageBitmap(thumbImage);
-                Toast.makeText(getApplicationContext(),String.valueOf(img_path),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),String.valueOf(imagePath),Toast.LENGTH_SHORT).show();
 
             } catch (Exception e) {
                 Log.e("ERROR", e.getMessage().toString());
@@ -282,13 +280,13 @@ public class BookRegisterActivity extends AppCompatActivity {
         }
     }
     public void cropImage() {
-        this.grantUriPermission("com.android.camera", img_path,
+        this.grantUriPermission("com.android.camera", imagePath,
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(img_path, "image/*");
+        intent.setDataAndType(imagePath, "image/*");
 
         List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, 0);
-        grantUriPermission(list.get(0).activityInfo.packageName, img_path,
+        grantUriPermission(list.get(0).activityInfo.packageName, imagePath,
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         int size = list.size();
         if (size == 0) {
@@ -314,7 +312,7 @@ public class BookRegisterActivity extends AppCompatActivity {
             File folder = new File(Environment.getExternalStorageDirectory() + "/test/");
             File tempFile = new File(folder.toString(), croppedFileName.getName());
 
-            img_path = FileProvider.getUriForFile(BookRegisterActivity.this,
+            imagePath = FileProvider.getUriForFile(BookRegisterActivity.this,
                     "com.example.ggrr1.bookyou.provider", tempFile);
 
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -322,14 +320,14 @@ public class BookRegisterActivity extends AppCompatActivity {
 
 
             intent.putExtra("return-data", false);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, img_path);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imagePath);
             intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString()); //Bitmap 형태로 받기 위해 해당 작업 진행
 
             Intent i = new Intent(intent);
             ResolveInfo res = list.get(0);
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             i.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            grantUriPermission(res.activityInfo.packageName, img_path,
+            grantUriPermission(res.activityInfo.packageName, imagePath,
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
@@ -389,7 +387,7 @@ public class BookRegisterActivity extends AppCompatActivity {
             }
         };
 
-        RegisterRequest registerRequest = new RegisterRequest(String.valueOf(user_id), image_path, name, author, publisher, published_date, subject, professor, price, sale_price, description, responseListener);
+        RegisterRequest registerRequest = new RegisterRequest(String.valueOf(user_id), img_path, name, author, publisher, published_date, subject, professor, price, sale_price, description, responseListener);
         RequestQueue queue = Volley.newRequestQueue(BookRegisterActivity.this);
         queue.add(registerRequest);
     }

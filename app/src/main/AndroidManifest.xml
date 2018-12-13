@@ -26,12 +26,13 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" />
+        <activity android:name=".MainActivity2" />
         <activity android:name=".BookListActivity" />
         <activity android:name=".BookRegisterActivity" />
         <activity android:name=".BookDetailActivity" />
         <activity android:name=".BookUpdateActivity" />
         <activity android:name=".MessageActivity" />
-
+        <activity android:name=".QRcodeActivity" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.ggrr1.bookyou.provider"
