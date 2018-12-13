@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Button;
@@ -22,11 +23,10 @@ import org.json.JSONObject;
 public class MessageActivity extends AppCompatActivity {
     ListView messageListView;
     Button btnDelete;
-    String userName, userMessage;
+    String bookName, userName, userTel, userMessage, created;
     MessageListAdapter messageListAdapter;
-    int user_id, book_list_status;
-    int count;
-    SparseBooleanArray checkedItems;
+    int user_id, message_list_status;
+    int count, checked;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,23 +47,21 @@ public class MessageActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"삭제.",Toast.LENGTH_SHORT).show();
                 count = messageListAdapter.getCount() ;
-                checkedItems = messageListView.getCheckedItemPositions();
-
-                for (int i = count-1; i >= 0; i--) {
-                    if(checkedItems.get(i)) {
-                        messageListAdapter.deleteItem(i);
+                if(count> 0) {
+                    checked = messageListView.getCheckedItemPosition();
+                    if (checked > -1 && checked < count) {
+                        messageListAdapter.deleteItem(checked);
+                        messageListView.clearChoices();
+                        messageListAdapter.notifyDataSetChanged();
+                        Toast.makeText(getApplicationContext(),"메세지가 삭제되었습니다.",Toast.LENGTH_SHORT).show();
                     }
                 }
-                // 모든 선택 상태 초기화.
-                messageListView.clearChoices() ;
-                messageListAdapter.notifyDataSetChanged();
-
-                Toast.makeText(getApplicationContext(),"메세지가 삭제되었습니다.",Toast.LENGTH_SHORT).show();
             }
         });
     }
-    private void dataSetting(){
+private void dataSetting(){
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -71,9 +69,9 @@ public class MessageActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
 
-                    book_list_status = jsonResponse.getInt("book_list_status");
+                    message_list_status = jsonResponse.getInt("message_list_status");
 
-                    if(book_list_status == 2){
+                    if(message_list_status == 2){
                         AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
                         builder.setMessage("서버와 통신이 원할하지 않습니다.")
                                 .setNegativeButton("AGAIN", null)
@@ -81,11 +79,14 @@ public class MessageActivity extends AppCompatActivity {
                                 .show();
                     }
 
-                    JSONArray book_list = jsonResponse.getJSONArray("book_list");
-                    for(int i=0; i<book_list.length(); i++) {
-                        userName = book_list.getJSONObject(i).getString("name");
-                        userMessage = book_list.getJSONObject(i).getString("author");
-                        messageListAdapter.addItem(userName, userMessage);
+                    JSONArray message_list = jsonResponse.getJSONArray("message_list");
+                    for(int i=0; i<message_list.length(); i++) {
+                        bookName = message_list.getJSONObject(i).getString("book_name");
+                        userName = message_list.getJSONObject(i).getString("name");
+                        userTel = message_list.getJSONObject(i).getString("tel");
+                        userMessage = message_list.getJSONObject(i).getString("message");
+                        created = message_list.getJSONObject(i).getString("created");
+                        messageListAdapter.addItem(bookName, userName, userTel, userMessage, created);
                     }
                     messageListView.setAdapter(messageListAdapter);
                 } catch (JSONException e) {
@@ -93,9 +94,9 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         };
-        ListRequest listRequest = new ListRequest(String.valueOf(user_id), responseListener);
+        MessageRequest messageRequest = new MessageRequest(String.valueOf(user_id), responseListener);
         RequestQueue queue = Volley.newRequestQueue(MessageActivity.this);
-        queue.add(listRequest);
+        queue.add(messageRequest);
     };
 
 }

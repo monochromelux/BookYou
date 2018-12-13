@@ -44,9 +44,9 @@
 
     <ListView
         android:id="@+id/messageListVIew"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:choiceMode="multipleChoice"
+        android:choiceMode="singleChoice"
         android:dividerHeight="1dp"
         android:divider="#767171">
 
