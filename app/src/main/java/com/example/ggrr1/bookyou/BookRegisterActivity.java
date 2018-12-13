@@ -68,7 +68,7 @@ public class BookRegisterActivity extends AppCompatActivity {
 
         checkPermissions();
 
-        btnImage = (ImageButton) findViewById(R.id.btnImage);
+        //btnImage = (ImageButton) findViewById(R.id.btnImage);
 
         editName = (EditText) findViewById(R.id.name);
         editAuthor = (EditText) findViewById(R.id.author);
@@ -82,43 +82,43 @@ public class BookRegisterActivity extends AppCompatActivity {
 
         btnRegister = (Button) findViewById(R.id.btnRegister);
 
-        btnImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        takePicture();
-                    }
-                };
-
-                DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        chooseAlbum();
-                    }
-                };
-
-                DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                    }
-                };
-                new AlertDialog.Builder(BookRegisterActivity.this)
-                        .setTitle("책 이미지 선택")
-                        .setPositiveButton("사진촬영", cameraListener)
-                        .setNeutralButton("앨범선택", albumListener)
-                        .setNegativeButton("취소", cancelListener)
-                        .show();
-            }
-        });
+//        btnImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which)
+//                    {
+//                        takePicture();
+//                    }
+//                };
+//
+//                DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which)
+//                    {
+//                        chooseAlbum();
+//                    }
+//                };
+//
+//                DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which)
+//                    {
+//                        dialog.dismiss();
+//                    }
+//                };
+//                new AlertDialog.Builder(BookRegisterActivity.this)
+//                        .setTitle("책 이미지 선택")
+//                        .setPositiveButton("사진촬영", cameraListener)
+//                        .setNeutralButton("앨범선택", albumListener)
+//                        .setNegativeButton("취소", cancelListener)
+//                        .show();
+//            }
+//        });
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
