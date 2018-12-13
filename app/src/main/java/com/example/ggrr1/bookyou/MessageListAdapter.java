@@ -65,10 +65,11 @@ public class MessageListAdapter extends BaseAdapter {
     }
 
     /* 아이템 데이터 추가를 위한 함수. 자신이 원하는대로 작성 */
-    public void addItem(String book_name, String user_name, String user_tel, String message, String created) {
+    public void addItem(int message_id, String book_name, String user_name, String user_tel, String message, String created) {
         MessageListItem messageListItem = new MessageListItem();
 
         /* MyItem에 아이템을 setting한다. */
+        messageListItem.setMessage_id(message_id);
         messageListItem.setBook_name(book_name);
         messageListItem.setUser_name(user_name);
         messageListItem.setTel(user_tel);
@@ -79,14 +80,16 @@ public class MessageListAdapter extends BaseAdapter {
         messageListItems.add(messageListItem);
     }
 
-    public void deleteItem(int position) {
+    public int deleteItem(int position) {
         int pos = position;
         int count = getCount();
+        int message_id = 0;
         for(int i = count-1; i >= 0; i--) {
             if(i == pos) {
+                message_id = messageListItems.get(i).getMessage_id();
                 messageListItems.remove(i);
             }
         }
-
+        return message_id;
     }
 }

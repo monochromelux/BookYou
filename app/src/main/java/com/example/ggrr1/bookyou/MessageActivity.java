@@ -1,5 +1,6 @@
 package com.example.ggrr1.bookyou;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +26,7 @@ public class MessageActivity extends AppCompatActivity {
     Button btnDelete;
     String bookName, userName, userTel, userMessage, created;
     MessageListAdapter messageListAdapter;
-    int user_id, message_list_status;
+    int user_id, message_list_status, message_delete_status , message_id;
     int count, checked;
 
     @Override
@@ -47,20 +48,17 @@ public class MessageActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"삭제.",Toast.LENGTH_SHORT).show();
                 count = messageListAdapter.getCount() ;
                 if(count> 0) {
                     checked = messageListView.getCheckedItemPosition();
                     if (checked > -1 && checked < count) {
-                        messageListAdapter.deleteItem(checked);
-                        messageListView.clearChoices();
-                        messageListAdapter.notifyDataSetChanged();
-                        Toast.makeText(getApplicationContext(),"메세지가 삭제되었습니다.",Toast.LENGTH_SHORT).show();
+                        Delete(checked, messageListView, messageListAdapter);
                     }
                 }
             }
         });
     }
+
 private void dataSetting(){
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -81,12 +79,13 @@ private void dataSetting(){
 
                     JSONArray message_list = jsonResponse.getJSONArray("message_list");
                     for(int i=0; i<message_list.length(); i++) {
+                        message_id = message_list.getJSONObject(i).getInt("message_id");
                         bookName = message_list.getJSONObject(i).getString("book_name");
                         userName = message_list.getJSONObject(i).getString("name");
                         userTel = message_list.getJSONObject(i).getString("tel");
                         userMessage = message_list.getJSONObject(i).getString("message");
                         created = message_list.getJSONObject(i).getString("created");
-                        messageListAdapter.addItem(bookName, userName, userTel, userMessage, created);
+                        messageListAdapter.addItem(message_id, bookName, userName, userTel, userMessage, created);
                     }
                     messageListView.setAdapter(messageListAdapter);
                 } catch (JSONException e) {
@@ -98,5 +97,54 @@ private void dataSetting(){
         RequestQueue queue = Volley.newRequestQueue(MessageActivity.this);
         queue.add(messageRequest);
     };
+
+
+
+    private void Delete(final int check, final ListView messageListView, final MessageListAdapter messageListAdapter){
+        Toast.makeText(getApplicationContext(), "된디", Toast.LENGTH_LONG);
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int message_num = 0;
+                switch (which){
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        message_num = messageListAdapter.deleteItem(check);
+                        messageListView.clearChoices();
+                        messageListAdapter.notifyDataSetChanged();
+
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject jsonResponse = new JSONObject(response);
+
+                                    message_delete_status  = jsonResponse.getInt("message_delete_status");
+                                    if(message_delete_status  == 1){
+                                        Toast.makeText(getApplicationContext(),"메세지가 삭제되었습니다.",Toast.LENGTH_SHORT).show();
+                                    }else if(message_delete_status   == 2){
+                                        Toast.makeText(getApplicationContext(),"서버와 연결이 원활하지 않습니다.",Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+
+                        MessageDeletRequest messageDeletRequest = new MessageDeletRequest(String.valueOf(message_num), responseListener);
+                        RequestQueue queue = Volley.newRequestQueue(MessageActivity.this);
+                        queue.add(messageDeletRequest);
+                        break;
+
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //No 버튼을 클릭했을때 처리
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+        builder.setMessage("정말 삭제하시겠습니까?")
+                .setNegativeButton("Yes", dialogClickListener)
+                .setPositiveButton("No", dialogClickListener).show();
+    }
 
 }

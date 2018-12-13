@@ -1,12 +1,20 @@
 package com.example.ggrr1.bookyou;
 
 public class MessageListItem {
+    private int message_id;
     private String book_name;
     private String user_name;
     private String tel;
     private String message;
     private String created;
 
+    public int getMessage_id() {
+        return message_id;
+    }
+
+    public void setMessage_id(int message_id) {
+        this.message_id = message_id;
+    }
 
     public String getBook_name() {
         return book_name;
