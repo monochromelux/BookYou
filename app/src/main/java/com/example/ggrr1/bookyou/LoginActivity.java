@@ -1,6 +1,8 @@
 package com.example.ggrr1.bookyou;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,8 +32,12 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox checkBox;
 
     GridLayout layLog, layJoin;
+    String loginId, loginPwd;
+    boolean checkb;
 
     Toolbar myToolbar;
+
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,20 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText emailLoginText = (EditText) findViewById(R.id.login_email);
         final EditText passwordLoginText = (EditText) findViewById(R.id.login_password);
+
+        SharedPreferences auto;
+        auto = getSharedPreferences("auto", 0);
+        editor= auto.edit();
+        loginId = auto.getString("inputId",null);
+        loginPwd = auto.getString("inputPwd",null);
+        checkb = auto.getBoolean("inputCheck",false);
+
+        if(checkb){
+            emailLoginText.setText(auto.getString("inputId", ""));
+            passwordLoginText.setText(auto.getString("inputPwd", ""));
+
+            checkBox.setChecked(true);
+        }
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -85,7 +105,14 @@ public class LoginActivity extends AppCompatActivity {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
-
+                if(isChecked) {
+                    checkb = true;
+                } else {
+                    // if unChecked, removeAll
+                    checkb = false;
+                    editor.clear();
+                    editor.commit();
+                }
             }
         });
 
@@ -121,6 +148,12 @@ public class LoginActivity extends AppCompatActivity {
                                 int login_status = jsonResponse.getInt("login_status");
 
                                 if (login_status == 1) {
+                                    if(checkb == true){
+                                        editor.putString("inputId", email);
+                                        editor.putString("inputPwd", password);
+                                        editor.putBoolean("inputCheck", true);
+                                        editor.commit();
+                                    }
                                     int user_id = jsonResponse.getInt("user_id");
                                     Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
                                     intent.putExtra("user_id", user_id);
