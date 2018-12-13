@@ -29,7 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BookListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BookListActivity extends AppCompatActivity {
 
     Button register;
     ListView booklist;
@@ -48,27 +48,10 @@ public class BookListActivity extends AppCompatActivity implements NavigationVie
         Intent intent = getIntent();
         user_id = intent.getIntExtra("user_id", 1);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
-        actionBar.setDisplayShowTitleEnabled(false);
-
         booklist = (ListView) findViewById(R.id.listview);
         register = (Button) findViewById(R.id.register);
 
         bookListAdapter = new BookListAdapter();
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         dataSetting();
 
@@ -146,22 +129,6 @@ public class BookListActivity extends AppCompatActivity implements NavigationVie
         }
     };
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        // Handle your other action bar items...
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
 
@@ -183,37 +150,5 @@ public class BookListActivity extends AppCompatActivity implements NavigationVie
             super.onBackPressed();
         }
     }
-
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-        switch(menuItem.getItemId()) {
-            case R.id.nav_book_list:
-
-                break;
-            case R.id.nav_message:
-
-                break;
-            case R.id.nav_qr_code:
-                Toast.makeText(this, "nav_qr_code clicked..", Toast.LENGTH_SHORT).show();
-                break;
-        }
-
-        drawer.closeDrawer(GravityCompat.START);
-        return false;
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        toggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        toggle.onConfigurationChanged(newConfig);
-    }
-
 
 }
