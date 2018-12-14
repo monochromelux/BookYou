@@ -21,7 +21,8 @@ public class BookUpdateActivity extends AppCompatActivity {
     EditText editName, editAuthor, editPublisher, editPublishedDate, editSubject, editProfessor, editPrice, editSalePrice, editDescription;
     Button btnUpdate;
 
-    String book_id, img_path, name, author, publisher, published_date, subject, professor, price, sale_price, description;
+    String book_id, name, author, publisher, published_date, subject, professor, price, sale_price, description;
+    String img_path = " ";
     int user_id, book_detail_status;
 
     @Override
