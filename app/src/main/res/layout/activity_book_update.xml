@@ -17,7 +17,7 @@
         android:background="#FE393A"
         android:gravity="center"
         android:padding="10dp"
-        android:text="도서 등록"
+        android:text="도서 수정"
         android:textColor="#FFF"
         android:textSize="17dp"
         android:textStyle="bold"
